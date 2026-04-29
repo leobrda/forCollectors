@@ -5,3 +5,4 @@ django-cloudinary-storage
 cloudinary
 psycopg2-binary
 gunicorn
+Pillow
