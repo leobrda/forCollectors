@@ -1,0 +1,10 @@
+<h2>Nova Coleção</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Salvar Coleção</button>
+</form>
+
+<br>
+<a href="{% url 'album_list' %}">Cancelar</a>
