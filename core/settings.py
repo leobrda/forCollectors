@@ -139,3 +139,6 @@ CLOUDINARY_STORAGE = {
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 MEDIA_URL = '/media/'
+
+LOGIN_REDIRECT_URL = 'album_list'
+LOGOUT_REDIRECT_URL = 'login'
