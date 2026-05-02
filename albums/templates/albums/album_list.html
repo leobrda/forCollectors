@@ -12,5 +12,15 @@
 <hr>
 
 <h1>Minhas Coleções</h1>
-<p>Bem-vindo! Em breve suas coleções aparecerão aqui.</p>
-<a href="{% url 'signup' %}">Criar outra conta</a>
+{% if collections %}
+    <ul>
+        {% for collection in collections %}
+            <li>
+                <strong>{{ collection.name }}</strong><br>
+                {{ collection.description }}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Você ainda não tem coleções cadastradas.</p>
+{% endif %}
