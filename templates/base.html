@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduDash - Coleções</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="{% url 'dashboard' %}">Dashboard</a> |
+            <a href="{% url 'album_list' %}">Minhas Coleções</a>
+        </nav>
+    </header>
+    <hr>
+
+    <main>
+        {% block content %}
+        <!-- O conteúdo das outras páginas entrará aqui -->
+        {% endblock %}
+    </main>
+</body>
+</html>

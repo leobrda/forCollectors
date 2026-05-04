@@ -77,3 +77,16 @@ def item_delete(request, pk):
         return redirect('collection_detail', pk=collection.pk)
 
     return render(request, 'albums/item_confirm_delete.html', {'item': item})
+
+
+@login_required
+def dashboard(request):
+    total_collections = request.user.collections.count()
+    total_items = Item.objects.filter(collection__owner=request.user).count()
+    recent_items = Item.objects.filter(collection__owner=request.user).order_by('-id')[:5]
+
+    return render(request, 'albums/dashboard.html', {
+        'total_collections': total_collections,
+        'total_items': total_items,
+        'recent_items': recent_items,
+    })
