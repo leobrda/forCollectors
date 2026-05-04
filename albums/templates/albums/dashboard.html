@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Bem-vindo ao seu Dashboard!</h2>
+
+    <div style="display: flex; gap: 20px;">
+        <div style="border: 1px solid #ccc; padding: 15px;">
+            <h3>Coleções</h3>
+            <p>{{ total_collections }}</p>
+        </div>
+        <div style="border: 1px solid #ccc; padding: 15px;">
+            <h3>Total de Itens</h3>
+            <p>{{ total_items }}</p>
+        </div>
+    </div>
+
+    <h4>Atividade Recente:</h4>
+    <ul>
+        {% for item in recent_items %}
+            <li>{{ item.title }} ({{ item.collection.name }})</li>
+        {% empty %}
+            <li>Nenhuma atividade ainda.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
