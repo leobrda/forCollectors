@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
-from .models import Collection
+from .models import Collection, Item
 from .forms import CollectionForm, ItemForm
 
 
@@ -50,3 +50,30 @@ def item_create(request, collection_pk):
 
     return render(request, 'albums/item_form.html', {'form': form, 'collection': collection})
 
+
+@login_required
+def item_update(request, pk):
+    item = get_object_or_404(Item, pk=pk, collection__owner=request.user)
+    collection = item.collection
+
+    if request.method == 'POST':
+        form = ItemForm(request.POST, request.FILES, instance=item)
+        if form.is_valid():
+            form.save()
+            return redirect('collection_detail', pk=collection.pk)
+    else:
+        form = ItemForm(instance=item)
+
+    return render(request, 'albums/item_form.html', {'form': form, 'collection': collection, 'is_edit': True})
+
+
+@login_required
+def item_delete(request, pk):
+    item = get_object_or_404(Item, pk=pk, collection__owner=request.user)
+    collection = item.collection
+
+    if request.method == 'POST':
+        item.delete()
+        return redirect('collection_detail', pk=collection.pk)
+
+    return render(request, 'albums/item_confirm_delete.html', {'item': item})

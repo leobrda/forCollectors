@@ -1,0 +1,10 @@
+<h2>Tem certeza que deseja deletar o item "{{ item.title }}"?</h2>
+<p>Essa ação não pode ser desfeita.</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" style="background-color: red; color: white;">Sim, Deletar</button>
+</form>
+
+<br>
+<a href="{% url 'collection_detail' item.collection.pk %}">Cancelar e Voltar</a>
