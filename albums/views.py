@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
+from django.db.models import Q
 from .models import Collection, Item
 from .forms import CollectionForm, ItemForm
 
@@ -31,7 +32,16 @@ def collection_detail(request, pk):
     collection = get_object_or_404(Collection, pk=pk, owner=request.user)
     items = collection.items.all()
 
-    return render(request, 'albums/collection_detail.html', {'collection': collection, 'items': items})
+    search_query = request.GET.get('search')
+    if search_query:
+        filters = Q(title__icontains=search_query) | Q(description__icontains=search_query)
+
+        if search_query.isdigit():
+            filters |= Q(year=int(search_query))
+
+        items = items.filter(filters)
+
+    return render(request, 'albums/collection_detail.html', {'collection': collection, 'items': items, 'search_query': search_query})
 
 
 @login_required
@@ -89,4 +99,21 @@ def dashboard(request):
         'total_collections': total_collections,
         'total_items': total_items,
         'recent_items': recent_items,
+    })
+
+
+@login_required
+def item_list(request):
+    search_query = request.GET.get('search')
+    items = Item.objects.filter(collection__owner=request.user)
+
+    if search_query:
+        items = items.filter(
+            Q(title__icontains=search_query) |
+            Q(description__icontains=search_query)
+        )
+
+    return render(request, 'albums/item_list.html', {
+        'items': items,
+        'search_query': search_query
     })

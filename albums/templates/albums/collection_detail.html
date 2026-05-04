@@ -1,4 +1,12 @@
 <h1>{{ collection.name }}</h1>
+<form method="GET" style="margin-bottom: 20px;">
+        <input type="text" name="search" placeholder="Buscar nesta coleção..." value="{{ search_query|default:'' }}">
+        <button type="submit">Pesquisar</button>
+        {% if search_query %}
+            <a href="{% url 'collection_detail' collection.pk %}">Limpar</a>
+        {% endif %}
+    </form>
+
 <p>{{ collection.description }}</p>
 
 <a href="{% url 'item_create' collection.pk %}">+ Adicionar Novo Item</a>
