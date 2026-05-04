@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models.signals import post_delete
+from django.db.models.signals import post_delete, pre_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
 from cloudinary.models import CloudinaryField
@@ -30,3 +30,19 @@ class Item(models.Model):
 def delete_item_image(sender, instance, **kwargs):
     if instance.image:
         cloudinary.uploader.destroy(instance.image.public_id)
+
+
+@receiver(pre_save, sender=Item)
+def delete_old_image_on_update(sender, instance, **kwargs):
+    if not instance.pk:
+        return False
+
+    try:
+        old_file = Item.objects.get(pk=instance.pk).image
+    except Item.DoesNotExist:
+        return False
+
+    new_file = instance.image
+    if not old_file == new_file:
+        if old_file:
+            cloudinary.uploader.destroy(old_file.public_id)
