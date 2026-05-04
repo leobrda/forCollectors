@@ -1,0 +1,26 @@
+<h1>{{ collection.name }}</h1>
+<p>{{ collection.description }}</p>
+
+<a href="{% url 'item_create' collection.pk %}">+ Adicionar Novo Item</a>
+
+<hr>
+
+<h3>Itens nesta coleção</h3>
+{% if items %}
+    <ul>
+        {% for item in items %}
+            <li>
+                <strong>{{ item.title }}</strong> ({{ item.year }})<br>
+                {% if item.image %}
+                    <img src="{{ item.image.url }}" alt="{{ item.title }}" style="max-width: 200px;">
+                {% endif %}
+                <p>{{ item.description }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Nenhum item adicionado ainda.</p>
+{% endif %}
+
+<br>
+<a href="{% url 'album_list' %}">Voltar para Minhas Coleções</a>

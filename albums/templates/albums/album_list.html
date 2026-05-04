@@ -16,7 +16,10 @@
     <ul>
         {% for collection in collections %}
             <li>
-                <strong>{{ collection.name }}</strong><br>
+                <a href="{% url 'collection_detail' collection.pk %}">
+                    <strong>{{ collection.name }}</strong>
+                </a>
+                <br>
                 {{ collection.description }}
             </li>
         {% endfor %}
