@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'cloudinary',
     'albums',
     'accounts',
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [
