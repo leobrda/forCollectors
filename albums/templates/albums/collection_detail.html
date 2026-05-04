@@ -1,4 +1,7 @@
-<h1>{{ collection.name }}</h1>
+{% extends 'base.html' %}
+
+{% block content %}
+{{ collection.name }}</h1>
 <form method="GET" style="margin-bottom: 20px;">
         <input type="text" name="search" placeholder="Buscar nesta coleção..." value="{{ search_query|default:'' }}">
         <button type="submit">Pesquisar</button>
@@ -34,3 +37,4 @@
 
 <br>
 <a href="{% url 'album_list' %}">Voltar para Minhas Coleções</a>
+{% endblock %}

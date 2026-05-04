@@ -6,6 +6,7 @@ urlpatterns = [
     path('new/', views.collection_create, name='collection_create'),
     path('collection/<int:pk>/', views.collection_detail, name='collection_detail'),
     path('collection/<int:collection_pk>/add-item/', views.item_create, name='item_create'),
+    path('collection/<int:pk>/edit/', views.collection_update, name='collection_update'),
     path('item/<int:pk>/edit/', views.item_update, name='item_update'),
     path('item/<int:pk>/delete/', views.item_delete, name='item_delete'),
     path('dashboard/', views.dashboard, name='dashboard'),

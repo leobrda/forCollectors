@@ -1,3 +1,6 @@
+{% extends 'base.html' %}
+
+{% block content %}
 <h2>Novo Item para: {{ collection.name }}</h2>
 
 <form method="post" enctype="multipart/form-data">
@@ -8,3 +11,4 @@
 
 <br>
 <a href="{% url 'collection_detail' collection.pk %}">Cancelar</a>
+{% endblock %}

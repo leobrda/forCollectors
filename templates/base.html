@@ -3,21 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduDash - Coleções</title>
+    <title>ForCollectors</title>
 </head>
 <body>
     <header>
-        <nav>
-            <a href="{% url 'dashboard' %}">Dashboard</a> |
-            <a href="{% url 'album_list' %}">Minhas Coleções</a>
-        </nav>
+        <nav style="background: #f4f4f4; padding: 10px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ccc;">
+    <div>
+        <a href="{% url 'dashboard' %}">Dashboard</a> |
+        <a href="{% url 'album_list' %}">Minhas Coleções</a>
+    </div>
+
+    <!-- INFORMAÇÕES DO USUÁRIO AQUI -->
+    <div>
+        {% if user.is_authenticated %}
+            <span>Olá, <strong>{{ user.username }}</strong>!</span> |
+            <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" style="background: none; border: none; color: red; cursor: pointer; text-decoration: underline;">Sair</button>
+            </form>
+        {% else %}
+            <a href="{% url 'login' %}">Entrar</a>
+        {% endif %}
+    </div>
+</nav>
     </header>
     <hr>
+    {% if messages %}
+        <div style="margin: 20px;">
+            {% for message in messages %}
+                <div style="padding: 15px; background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-radius: 5px;">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+<main>
+    {% block content %}
+    {% endblock %}
+</main>
 
-    <main>
-        {% block content %}
-        <!-- O conteúdo das outras páginas entrará aqui -->
-        {% endblock %}
-    </main>
 </body>
 </html>

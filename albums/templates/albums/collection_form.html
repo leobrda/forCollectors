@@ -1,10 +1,14 @@
-<h2>Nova Coleção</h2>
+{% extends 'base.html' %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Salvar Coleção</button>
-</form>
+{% block content %}
+    <h1>{% if form.instance.pk %}Editar{% else %}Nova{% endif %} Coleção</h1>
 
-<br>
-<a href="{% url 'album_list' %}">Cancelar</a>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Salvar Coleção</button>
+    </form>
+
+    <br>
+    <a href="{% url 'album_list' %}">Cancelar</a>
+{% endblock %}
