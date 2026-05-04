@@ -1,16 +1,6 @@
-{% if user.is_authenticated %}
-    <p>Olá, {{ user.username }}! |
-    <form action="{% url 'logout' %}" method="post" style="display:inline;">
-        {% csrf_token %}
-        <button type="submit">Sair</button>
-    </form>
-    </p>
-{% else %}
-    <a href="{% url 'login' %}">Fazer Login</a>
-{% endif %}
+{% extends 'base.html' %}
 
-<hr>
-
+{% block content %}
 <h1>Minhas Coleções</h1>
 {% if collections %}
     <ul>
@@ -19,6 +9,7 @@
                 <a href="{% url 'collection_detail' collection.pk %}">
                     <strong>{{ collection.name }}</strong>
                 </a>
+                <a href="{% url 'collection_update' collection.pk %}" style="font-size: 0.8em; color: gray;">Editar Coleção</a>
                 <br>
                 {{ collection.description }}
             </li>
@@ -28,5 +19,7 @@
     <p>Você ainda não tem coleções cadastradas.</p>
 {% endif %}
 
+
 <a href="{% url 'collection_create' %}">+ Nova Coleção</a>
 <hr>
+{% endblock %}

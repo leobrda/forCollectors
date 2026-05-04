@@ -1,3 +1,6 @@
+{% extends 'base.html' %}
+
+{% block content %}
 <h2>Tem certeza que deseja deletar o item "{{ item.title }}"?</h2>
 <p>Essa ação não pode ser desfeita.</p>
 
@@ -8,3 +11,4 @@
 
 <br>
 <a href="{% url 'collection_detail' item.collection.pk %}">Cancelar e Voltar</a>
+{% endblock %}

@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from .models import Collection, Item
@@ -20,10 +21,25 @@ def collection_create(request):
             collection = form.save(commit=False)
             collection.owner = request.user
             collection.save()
+            messages.success(request, f"Coleção '{collection.name}' criada com sucesso!")
             return redirect('album_list')
     else:
         form = CollectionForm()
 
+    return render(request, 'albums/collection_form.html', {'form': form})
+
+
+@login_required
+def collection_update(request, pk):
+    collection = get_object_or_404(Collection, pk=pk, owner=request.user)
+    if request.method == 'POST':
+        form = CollectionForm(request.POST, instance=collection)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Coleção '{collection.name}' atualizada!")
+            return redirect('album_list')
+    else:
+        form = CollectionForm(instance=collection)
     return render(request, 'albums/collection_form.html', {'form': form})
 
 
@@ -54,6 +70,7 @@ def item_create(request, collection_pk):
             item = form.save(commit=False)
             item.collection = collection
             item.save()
+            messages.success(request, f"O item '{item.title}' foi adicionado à coleção '{collection.name}'!")
             return redirect('collection_detail', pk=collection.pk)
     else:
         form = ItemForm()
@@ -70,6 +87,7 @@ def item_update(request, pk):
         form = ItemForm(request.POST, request.FILES, instance=item)
         if form.is_valid():
             form.save()
+            messages.success(request, f"As alterações no item '{item.title}' foram salvas com sucesso!")
             return redirect('collection_detail', pk=collection.pk)
     else:
         form = ItemForm(instance=item)
@@ -83,8 +101,10 @@ def item_delete(request, pk):
     collection = item.collection
 
     if request.method == 'POST':
+        title = item.title
         item.delete()
-        return redirect('collection_detail', pk=collection.pk)
+        messages.success(request, f"O item '{title}' foi deletado com sucesso!")
+        return redirect('collection_detail', pk=item.collection.pk)
 
     return render(request, 'albums/item_confirm_delete.html', {'item': item})
 
