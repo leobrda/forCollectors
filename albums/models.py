@@ -1,6 +1,9 @@
 from django.db import models
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 from django.contrib.auth.models import User
 from cloudinary.models import CloudinaryField
+import cloudinary.uploader
 
 
 class Collection(models.Model):
@@ -22,3 +25,8 @@ class Item(models.Model):
 
     def __str__(self):
         return f"{self.title} - {self.collection.name}"
+
+@receiver(post_delete, sender=Item)
+def delete_item_image(sender, instance, **kwargs):
+    if instance.image:
+        cloudinary.uploader.destroy(instance.image.public_id)
