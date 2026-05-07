@@ -1,14 +1,81 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Novo Item para: {{ collection.name }}</h2>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-dark text-white py-3">
+                    <h4 class="mb-0 fw-bold text-center">
+                        {% if form.instance.pk %}
+                            Editar Item
+                        {% else %}
+                            Novo Item para: {{ collection.name }}
+                        {% endif %}
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" enctype="multipart/form-data" novalidate>
+                        {% csrf_token %}
 
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Salvar Item</button>
-</form>
+                        {% for field in form %}
+                            <div class="mb-3">
+                                <label for="{{ field.id_for_label }}" class="form-label fw-bold small text-uppercase text-muted">
+                                    {{ field.label }}
+                                </label>
 
-<br>
-<a href="{% url 'collection_detail' collection.pk %}">Cancelar</a>
+                                {# Renderiza o campo do Django #}
+                                {{ field }}
+
+                                {% if field.help_text %}
+                                    <div class="form-text text-muted small">{{ field.help_text }}</div>
+                                {% endif %}
+
+                                {% if field.errors %}
+                                    <div class="text-danger small mt-1 fw-bold">
+                                        {{ field.errors|striptags }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg fw-bold shadow-sm">Salvar Item</button>
+                            <a href="javascript:history.back()" class="btn btn-outline-secondary">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Estilização global dos inputs para Bootstrap */
+    input, select, textarea {
+        display: block;
+        width: 100%;
+        padding: .5rem .75rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #212529;
+        background-color: #fff;
+        border: 1px solid #ced4da;
+        border-radius: .375rem;
+    }
+
+    /* Remove animações e brilhos no foco */
+    input:focus, select:focus, textarea:focus {
+        outline: 0;
+        box-shadow: none !important;
+        border-color: #0d6efd !important;
+        transition: none !important;
+    }
+
+    /* Ajuste para campo de arquivo */
+    input[type="file"] {
+        padding: .375rem;
+    }
+</style>
 {% endblock %}
