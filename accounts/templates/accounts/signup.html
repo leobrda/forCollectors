@@ -1,7 +1,68 @@
-<h2>Criar Conta</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Cadastrar</button>
-</form>
-<p>Já tem uma conta? <a href="#">Faça login aqui</a></p>
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center align-items-center" style="min-height: 80vh;">
+        <div class="col-md-6">
+            <div class="card shadow border-0">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <h2 class="fw-bold">Criar Conta</h2>
+                        <p class="text-muted">Cadastre-se para começar sua coleção no ForCollectors</p>
+                    </div>
+
+                    <form method="POST" novalidate>
+                        {% csrf_token %}
+
+                        {% for field in form %}
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold text-uppercase text-muted">{{ field.label }}</label>
+                                {# O widget do Django será renderizado aqui #}
+                                {{ field }}
+
+                                {% if field.help_text %}
+                                    <div class="form-text small">{{ field.help_text }}</div>
+                                {% endif %}
+
+                                {% for error in field.errors %}
+                                    <div class="text-danger small">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-success btn-lg fw-bold">Finalizar Cadastro</button>
+                            <a href="{% url 'login' %}" class="btn btn-link text-decoration-none">Já tenho uma conta</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Injeção de estilo para os inputs do Django no Signup */
+    input {
+        display: block;
+        width: 100%;
+        padding: .375rem .75rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #212529;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: .375rem;
+    }
+    input:focus {
+        outline: 0;
+        box-shadow: none !important;
+        border-color: #198754 !important; /* Cor verde para combinar com o botão success */
+    }
+    body {
+        background-color: #f8f9fa;
+    }
+</style>
+{% endblock %}

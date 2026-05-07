@@ -1,14 +1,32 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Tem certeza que deseja deletar o item "{{ item.title }}"?</h2>
-<p>Essa ação não pode ser desfeita.</p>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <div class="card shadow-sm border-0 py-4 px-3">
+                <div class="card-body">
+                    <div class="mb-4">
+                        <span style="font-size: 4rem;">🗑️</span>
+                    </div>
+                    <h2 class="fw-bold mb-3 text-danger">Confirmar Exclusão</h2>
+                    <p class="text-muted fs-5 mb-4">
+                        Você tem certeza que deseja deletar o item:<br>
+                        <strong class="text-dark">"{{ item.title }}"</strong>?
+                        <br><br>
+                        <span class="small text-muted">Essa ação removerá o arquivo permanentemente.</span>
+                    </p>
 
-<form method="post">
-    {% csrf_token %}
-    <button type="submit" style="background-color: red; color: white;">Sim, Deletar</button>
-</form>
-
-<br>
-<a href="{% url 'collection_detail' item.collection.pk %}">Cancelar e Voltar</a>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                            <button type="submit" class="btn btn-danger btn-lg px-5 fw-bold shadow-sm">Sim, Deletar</button>
+                            <a href="javascript:history.back()" class="btn btn-outline-secondary btn-lg px-5">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

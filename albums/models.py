@@ -7,21 +7,21 @@ import cloudinary.uploader
 
 
 class Collection(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField(blank=True, null=True)
+    name = models.CharField(max_length=100, verbose_name="Nome da Coleção")
+    description = models.TextField(blank=True, null=True, verbose_name="Descrição")
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='collections')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.name} ({self.owner.username})'
+        return f'{self.name} - ({self.owner.username})'
 
 
 class Item(models.Model):
-    collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name='items')
-    title = models.CharField(max_length=100)
-    year = models.CharField(max_length=4, blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
-    image = CloudinaryField('image', folder='media/items', blank=True, null=True)
+    collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name='items', verbose_name="Coleção")
+    title = models.CharField(max_length=100, verbose_name="Título")
+    year = models.CharField(max_length=4, blank=True, null=True, verbose_name="Ano")
+    description = models.TextField(blank=True, null=True, verbose_name="Descrição")
+    image = CloudinaryField('Imagem', folder='media/items', blank=True, null=True)
 
     def __str__(self):
         return f"{self.title} - {self.collection.name}"

@@ -1,40 +1,135 @@
 {% extends 'base.html' %}
 
 {% block content %}
-{{ collection.name }}</h1>
-<form method="GET" style="margin-bottom: 20px;">
-        <input type="text" name="search" placeholder="Buscar nesta coleção..." value="{{ search_query|default:'' }}">
-        <button type="submit">Pesquisar</button>
-        {% if search_query %}
-            <a href="{% url 'collection_detail' collection.pk %}">Limpar</a>
-        {% endif %}
-    </form>
+<div class="container mt-4">
+    <div class="mb-4 text-center text-md-start">
+        <h1 class="display-5 fw-bold">{{ collection.name }}</h1>
+        <p class="lead text-muted">{{ collection.description }}</p>
+    </div>
 
-<p>{{ collection.description }}</p>
+    <div class="card mb-5 shadow-sm border-0 bg-light">
+        <div class="card-body p-4">
+            <form method="GET" class="row g-3">
+                <div class="col-12">
+                    <div class="input-group">
+                        <input type="text" name="search"
+                               class="form-control no-focus-outline"
+                               placeholder="Buscar nesta coleção (ex: Camisa, 2020...)"
+                               value="{{ search_query|default:'' }}">
+                        <button type="submit" class="btn btn-primary px-4">Pesquisar</button>
+                    </div>
+                </div>
 
-<a href="{% url 'item_create' collection.pk %}">+ Adicionar Novo Item</a>
+                <div class="col-12">
+                    <a href="{% url 'item_create' collection.pk %}" class="btn btn-success w-100 py-2 shadow-sm fw-bold">
+                        + Adicionar Novo Item
+                    </a>
+                </div>
 
-<hr>
-
-<h3>Itens nesta coleção</h3>
-{% if items %}
-    <ul>
-        {% for item in items %}
-            <li>
-                <strong>{{ item.title }}</strong> ({{ item.year }})<br>
-                {% if item.image %}
-                    <img src="{{ item.image.url }}" alt="{{ item.title }}" style="max-width: 200px;">
+                {% if search_query %}
+                    <div class="col-12 text-center">
+                        <a href="{% url 'collection_detail' collection.pk %}" class="text-decoration-none small text-danger">Limpar busca</a>
+                    </div>
                 {% endif %}
-                <p>{{ item.description }}</p>
+            </form>
+        </div>
+    </div>
 
-                <a href="{% url 'item_update' item.pk %}">Editar</a> | 
-                <a href="{% url 'item_delete' item.pk %}" style="color: red;">Deletar</a>            </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>Nenhum item adicionado ainda.</p>
-{% endif %}
+    <h3 class="mb-4 fw-bold">Itens na Coleção</h3>
 
-<br>
-<a href="{% url 'album_list' %}">Voltar para Minhas Coleções</a>
+    {% if items %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for item in items %}
+                <div class="col">
+                    <div class="card h-100 shadow-sm border-0 item-card">
+                        {% if item.image %}
+                            <img src="{{ item.image.url }}"
+                                 class="card-img-top"
+                                 alt="{{ item.title }}"
+                                 style="height: 280px; object-fit: cover; cursor: pointer;"
+                                 data-bs-toggle="modal"
+                                 data-bs-target="#imageModal{{ item.pk }}"
+                                 title="Clique para ampliar">
+                        {% else %}
+                            <div class="bg-light d-flex align-items-center justify-content-center border-bottom" style="height: 280px;">
+                                <span class="text-muted italic">Sem imagem</span>
+                            </div>
+                        {% endif %}
+
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold mb-1">{{ item.title }}</h5>
+                            <span class="badge bg-secondary mb-3">{{ item.year }}</span>
+                            <p class="card-text text-truncate-3 small text-muted">{{ item.description }}</p>
+                        </div>
+
+                        <div class="card-footer bg-white border-top-0 d-flex justify-content-between pb-3">
+                            <a href="{% url 'item_update' item.pk %}" class="btn btn-sm btn-outline-primary px-3">Editar</a>
+                            <a href="{% url 'item_delete' item.pk %}" class="btn btn-sm btn-outline-danger px-3">Deletar</a>
+                        </div>
+                    </div>
+                </div>
+
+                {% if item.image %}
+                <div class="modal fade" id="imageModal{{ item.pk }}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content bg-dark border-0">
+                            <div class="modal-header border-0 pb-0">
+                                <h5 class="modal-title text-white">{{ item.title }} ({{ item.year }})</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+
+                            <div class="modal-body p-2 d-flex align-items-center justify-content-center" style="height: 75vh; overflow: hidden;">
+                                <img src="{{ item.image.url }}"
+                                     class="img-fluid rounded"
+                                     alt="{{ item.title }}"
+                                     style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                            </div>
+
+                            <div class="modal-footer border-0 justify-content-center pt-0">
+                                <p class="text-light small text-center">{{ item.description|truncatewords:20 }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-5 card bg-light border-0">
+            <p class="text-muted fs-5">Nenhum item encontrado.</p>
+        </div>
+    {% endif %}
+
+    <div class="mt-5 mb-5 text-center border-top pt-3">
+        <a href="{% url 'album_list' %}" class="text-decoration-none text-secondary">
+            ← Voltar para Minhas Coleções
+        </a>
+    </div>
+</div>
+
+<style>
+    /* Remove a animação/brilho azul e a transição do campo de busca */
+    .no-focus-outline:focus {
+        box-shadow: none !important;
+        border-color: #ced4da !important;
+        transition: none !important;
+    }
+
+    /* Estilo para limitar a descrição a 3 linhas nos cards */
+    .text-truncate-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    /* Efeito suave nos cards */
+    .item-card {
+        transition: transform 0.2s ease;
+    }
+    .item-card:hover {
+        transform: translateY(-5px);
+    }
+</style>
 {% endblock %}
