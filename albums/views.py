@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
-from django.db.models import Q
+from django.db.models import Q, Count
 from .models import Collection, Item
 from .forms import CollectionForm, ItemForm
 
@@ -115,10 +115,16 @@ def dashboard(request):
     total_items = Item.objects.filter(collection__owner=request.user).count()
     recent_items = Item.objects.filter(collection__owner=request.user).order_by('-id')[:5]
 
+    collections = request.user.collections.annotate(num_items=Count('items'))
+    chart_labels = [c.name for c in collections]
+    chart_data = [c.num_items for c in collections]
+
     return render(request, 'albums/dashboard.html', {
         'total_collections': total_collections,
         'total_items': total_items,
         'recent_items': recent_items,
+        'chart_labels': chart_labels,
+        'chart_data': chart_data,
     })
 
 
