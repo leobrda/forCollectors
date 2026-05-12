@@ -145,11 +145,14 @@ def item_list(request):
     })
 
 
+@login_required
 def collection_delete(request, pk):
     collection = get_object_or_404(Collection, pk=pk)
 
     if request.method == 'POST':
         collection.delete()
+        messages.success(request, f'A coleção "{collection.name}" e todos os seus itens foram excluídos!')
         return redirect('album_list')
+    
     return render(request, 'albums/collection_confirm_delete.html', {'object': collection})
 
