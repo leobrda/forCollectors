@@ -45,6 +45,14 @@
                             <button type="submit" class="btn btn-primary btn-lg fw-bold">Salvar Dados</button>
                             <a href="javascript:history.back()" class="btn btn-outline-secondary">Cancelar</a>
                         </div>
+                        {% if form.instance.pk %}
+                            <div class="mt-4 border-top pt-3">
+                                <p class="text-muted small">Zona de Perigo</p>
+                                <a href="{% url 'collection_delete' form.instance.pk %}" class="btn btn-outline-danger btn-sm">
+                                    Excluir Coleção Permanentemente
+                                </a>
+                            </div>
+                        {% endif %}
                     </form>
                 </div>
             </div>
