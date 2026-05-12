@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models.signals import post_delete, pre_save
+from django.db.models.signals import post_delete, pre_save, pre_delete
 from django.dispatch import receiver
 from django.contrib.auth.models import User
 from cloudinary.models import CloudinaryField
@@ -46,3 +46,12 @@ def delete_old_image_on_update(sender, instance, **kwargs):
     if not old_file == new_file:
         if old_file:
             cloudinary.uploader.destroy(old_file.public_id)
+
+
+@receiver(pre_delete, sender=Collection)
+def delete_collection_images(sender, instance, **kwargs):
+    for item in instance.items.all():
+        if item.image:
+            cloudinary.uploader.destroy(item.image.public_id)
+
+

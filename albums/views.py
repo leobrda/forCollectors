@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
@@ -137,3 +137,13 @@ def item_list(request):
         'items': items,
         'search_query': search_query
     })
+
+
+def collection_delete(request, pk):
+    collection = get_object_or_404(Collection, pk=pk)
+
+    if request.method == 'POST':
+        collection.delete()
+        return redirect('album_list')
+    return render(request, 'albums/collection_confirm_delete.html', {'object': collection})
+
