@@ -21,9 +21,11 @@
                 </div>
 
                 <div class="col-12">
-                    <a href="{% url 'item_create' collection.pk %}" class="btn btn-success w-100 py-2 shadow-sm fw-bold">
-                        + Adicionar Novo Item
-                    </a>
+                    {% if user == collection.owner %}
+                        <a href="{% url 'item_create' collection.pk %}" class="btn btn-success w-100 py-2 shadow-sm fw-bold">
+                            + Adicionar Novo Item
+                        </a>
+                    {% endif %}
                 </div>
 
                 {% if search_query %}
@@ -63,8 +65,10 @@
                         </div>
 
                         <div class="card-footer bg-white border-top-0 d-flex justify-content-between pb-3">
-                            <a href="{% url 'item_update' item.pk %}" class="btn btn-sm btn-outline-primary px-3">Editar</a>
-                            <a href="{% url 'item_delete' item.pk %}" class="btn btn-sm btn-outline-danger px-3">Deletar</a>
+                            {% if user == collection.owner %}
+                                <a href="{% url 'item_update' item.pk %}" class="btn btn-sm btn-outline-primary px-3">Editar</a>
+                                <a href="{% url 'item_delete' item.pk %}" class="btn btn-sm btn-outline-danger px-3">Deletar</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
