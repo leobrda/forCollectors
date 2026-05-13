@@ -45,7 +45,12 @@ def collection_update(request, pk):
 
 @login_required
 def collection_detail(request, pk):
-    collection = get_object_or_404(Collection, pk=pk, owner=request.user)
+    collection = get_object_or_404(Collection, pk=pk)
+
+    if not collection.is_public and collection.owner != request.user:
+        messages.error(request, "Esta coleção é privada e você não tem permissão para visualizá-la.")
+        return redirect('album_list')
+
     items = collection.items.all()
 
     search_query = request.GET.get('search')
@@ -62,7 +67,11 @@ def collection_detail(request, pk):
 
 @login_required
 def item_create(request, collection_pk):
-    collection = get_object_or_404(Collection, pk=collection_pk, owner=request.user)
+    collection = get_object_or_404(Collection, pk=collection_pk)
+
+    if collection.owner != request.user:
+        messages.error(request, "Ação negada: Você só pode adicionar itens às suas próprias coleções.")
+        return redirect('collection_detail', pk=collection.pk)
 
     if request.method == 'POST':
         form = ItemForm(request.POST, request.FILES)
@@ -156,3 +165,20 @@ def collection_delete(request, pk):
     
     return render(request, 'albums/collection_confirm_delete.html', {'object': collection})
 
+
+@login_required
+def global_search(request):
+    query = request.GET.get('q')
+    items = Item.objects.filter(
+        Q(collection__is_public=True) | Q(collection__owner=request.user)
+    )
+
+    if query:
+        items = items.filter(
+            Q(title__icontains=query) |
+            Q(description__icontains=query) |
+            Q(collection__name__icontains=query) |
+            Q(collection__owner__username__icontains=query)
+        ).distinct()
+
+    return render(request, 'albums/global_search_results.html', {'items': items, 'query': query})
