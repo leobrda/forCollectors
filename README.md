@@ -27,7 +27,7 @@ O projeto utiliza uma stack moderna focada em escalabilidade e facilidade de man
 ### Via Docker (Recomendado)
 ```bash
 # 1. Clone o repositório
-git clone [https://github.com/leobrda/forCollectors.git](https://github.com/leobrda/forCollectors.git)
+git clone git clone https://github.com/leobrda/forCollectors.git
 
 # 2. Configure o arquivo .env com suas chaves (Cloudinary, SMTP, etc)
 
