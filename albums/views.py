@@ -186,5 +186,5 @@ def global_search(request):
 
 @login_required
 def explore(request):
-    items = Item.objects.filter(collection__is_public=True).order_by('-id')
+    items = Item.objects.filter(collection__is_public=True).exclude(collection__owner=request.user).order_by('-id')
     return render(request, 'albums/explore.html', {'items': items})
