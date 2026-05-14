@@ -95,27 +95,34 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
 
         <!-- Mensagens (Alertas) -->
-        {% if messages %}
-            <div class="space-y-4 mb-6">
-            {% for message in messages %}
-                <div x-data="{ show: true }" x-show="show"
-                     class="flex items-center justify-between p-4 rounded-xl shadow-sm border transition-all
-                            {% if message.tags == 'error' %} bg-rose-50 border-rose-200 text-rose-800 {% else %} bg-emerald-50 border-emerald-200 text-emerald-800 {% endif %}">
-                    <div class="flex items-center">
-                        <span class="mr-3">
-                            {% if message.tags == 'error' %} ⚠️ {% else %} ✅ {% endif %}
-                        </span>
-                        <p class="font-medium">{{ message }}</p>
-                    </div>
-                    <button @click="show = false" class="text-current opacity-50 hover:opacity-100 transition">
-                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
-            {% endfor %}
+{% if messages %}
+    <div class="space-y-4 mb-6">
+    {% for message in messages %}
+        <div x-data="{ show: true }" x-show="show"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 transform -translate-y-2"
+             x-transition:enter-end="opacity-100 transform translate-y-0"
+             class="flex items-start justify-between p-4 rounded-2xl shadow-sm border overflow-hidden transition-all
+                    {% if message.tags == 'error' %} bg-rose-50 border-rose-200 text-rose-800 {% else %} bg-emerald-50 border-emerald-200 text-emerald-800 {% endif %}">
+
+            <div class="flex items-start min-w-0 flex-grow">
+                <span class="mr-3 mt-0.5 shrink-0">
+                    {% if message.tags == 'error' %} ⚠️ {% else %} ✅ {% endif %}
+                </span>
+                <p class="font-bold text-sm leading-relaxed break-all">
+                    {{ message }}
+                </p>
             </div>
-        {% endif %}
+
+            <button @click="show = false" class="ml-4 shrink-0 text-current opacity-40 hover:opacity-100 transition-opacity">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+    {% endfor %}
+    </div>
+{% endif %}
 
         <main>
             {% block content %}

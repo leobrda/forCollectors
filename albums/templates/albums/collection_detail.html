@@ -3,22 +3,28 @@
 {% block content %}
 <div class="space-y-10 animate-fadeIn">
     <!-- Cabeçalho da Coleção -->
-    <header class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col md:flex-row justify-between items-center gap-6">
-        <div class="text-center md:text-left">
-            <h1 class="text-4xl font-black text-slate-900 tracking-tight">{{ collection.name }}</h1>
-            <p class="mt-2 text-lg text-slate-500 max-w-2xl">{{ collection.description|default:"Esta coleção ainda não possui uma descrição detalhada." }}</p>
-        </div>
-        <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-            {% if user == collection.owner %}
-                <a href="{% url 'item_create' collection.pk %}" class="inline-flex items-center justify-center px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl shadow-lg shadow-emerald-200 transition transform hover:-translate-y-1">
-                    <span class="mr-2">＋</span> Adicionar Item
-                </a>
-            {% endif %}
-            <a href="{% url 'album_list' %}" class="inline-flex items-center justify-center px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-2xl transition">
-                ← Voltar
+    <header class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col md:flex-row justify-between items-center gap-6 overflow-hidden">
+    <div class="text-center md:text-left min-w-0 flex-grow w-full">
+        <!-- Título com quebra de palavra e limite visual -->
+        <h1 class="text-4xl font-black text-slate-900 tracking-tight break-words line-clamp-2" title="{{ collection.name }}">
+            {{ collection.name }}
+        </h1>
+        <!-- Descrição com limite de altura -->
+        <p class="mt-2 text-lg text-slate-500 max-w-2xl break-words line-clamp-3">
+            {{ collection.description|default:"Esta coleção ainda não possui uma descrição detalhada." }}
+        </p>
+    </div>
+    <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto shrink-0">
+        {% if user == collection.owner %}
+            <a href="{% url 'item_create' collection.pk %}" class="inline-flex items-center justify-center px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl shadow-lg shadow-emerald-200 transition transform hover:-translate-y-1 whitespace-nowrap">
+                <span class="mr-2">＋</span> Adicionar Item
             </a>
-        </div>
-    </header>
+        {% endif %}
+        <a href="{% url 'album_list' %}" class="inline-flex items-center justify-center px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-2xl transition">
+            ← Voltar
+        </a>
+    </div>
+</header>
 
     <!-- Barra de Filtro e Busca Interna -->
     <section class="bg-slate-900 p-6 rounded-3xl shadow-xl">
