@@ -1,81 +1,123 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-6">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-dark text-white py-3">
-                    <h4 class="mb-0 fw-bold text-center">
-                        {% if form.instance.pk %}
-                            Editar Item
-                        {% else %}
-                            Novo Item para: {{ collection.name }}
-                        {% endif %}
-                    </h4>
-                </div>
-                <div class="card-body p-4">
-                    <form method="POST" enctype="multipart/form-data" novalidate>
-                        {% csrf_token %}
+<div class="max-w-2xl mx-auto py-10 animate-fadeIn">
+    <!-- Card Principal -->
+    <div class="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
 
-                        {% for field in form %}
-                            <div class="mb-3">
-                                <label for="{{ field.id_for_label }}" class="form-label fw-bold small text-uppercase text-muted">
-                                    {{ field.label }}
-                                </label>
+        <!-- Cabeçalho com Identificação da Coleção -->
+        <div class="bg-slate-900 px-8 py-6">
+            <h4 class="text-xl font-bold text-white flex flex-col md:flex-row md:items-center gap-2">
+                {% if form.instance.pk %}
+                    <span class="text-sky-400">✏️</span> Editar Item: {{ form.instance.title }}
+                {% else %}
+                    <span class="text-emerald-400">📦</span> Novo Item
+                    <span class="hidden md:inline text-slate-500 mx-1">|</span>
+                    <span class="text-sm font-medium text-slate-400">Coleção: {{ collection.name }}</span>
+                {% endif %}
+            </h4>
+        </div>
 
-                                {# Renderiza o campo do Django #}
-                                {{ field }}
+        <div class="p-8">
+            <form method="POST" enctype="multipart/form-data" novalidate class="space-y-6">
+                {% csrf_token %}
 
-                                {% if field.help_text %}
-                                    <div class="form-text text-muted small">{{ field.help_text }}</div>
-                                {% endif %}
+                {% for field in form %}
+                    <div class="space-y-2">
+                        <label for="{{ field.id_for_label }}" class="block text-xs font-black text-slate-500 uppercase tracking-widest">
+                            {{ field.label }}
+                        </label>
 
-                                {% if field.errors %}
-                                    <div class="text-danger small mt-1 fw-bold">
-                                        {{ field.errors|striptags }}
-                                    </div>
-                                {% endif %}
-                            </div>
-                        {% endfor %}
-
-                        <div class="d-grid gap-2 mt-4">
-                            <button type="submit" class="btn btn-primary btn-lg fw-bold shadow-sm">Salvar Item</button>
-                            <a href="javascript:history.back()" class="btn btn-outline-secondary">Cancelar</a>
+                        <div class="relative group">
+                            {# O Django renderiza o input aqui; o CSS abaixo cuida da estética #}
+                            {{ field }}
                         </div>
-                    </form>
+
+                        {% if field.help_text %}
+                            <p class="text-xs text-slate-400 italic font-medium">{{ field.help_text }}</p>
+                        {% endif %}
+
+                        {% if field.errors %}
+                            <div class="flex items-center gap-2 text-rose-500 text-sm font-bold bg-rose-50 p-3 rounded-xl border border-rose-100 animate-pulse">
+                                <span>⚠️</span>
+                                {{ field.errors|striptags }}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <!-- Ações -->
+                <div class="flex flex-col gap-3 pt-6">
+                    <button type="submit" class="w-full py-4 bg-sky-600 hover:bg-sky-700 text-white font-black rounded-2xl shadow-lg shadow-sky-200 transition-all transform hover:-translate-y-1 active:scale-95">
+                        Confirmar e Salvar
+                    </button>
+                    <a href="javascript:history.back()" class="w-full py-4 bg-slate-50 hover:bg-slate-100 text-slate-500 font-bold rounded-2xl text-center transition border border-slate-100">
+                        Cancelar
+                    </a>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
+
+    <!-- Dica Amigável no rodapé do form -->
+    <p class="mt-6 text-center text-slate-400 text-sm">
+        As fotos enviadas são processadas automaticamente via <span class="text-sky-500 font-semibold">Cloudinary</span>.
+    </p>
 </div>
 
 <style>
-    /* Estilização global dos inputs para Bootstrap */
-    input, select, textarea {
-        display: block;
+    /* Estilização via injeção de atributos para manter o Django ORM limpo */
+    input[type="text"],
+    input[type="number"],
+    textarea,
+    select {
         width: 100%;
-        padding: .5rem .75rem;
-        font-size: 1rem;
-        font-weight: 400;
-        line-height: 1.5;
-        color: #212529;
-        background-color: #fff;
-        border: 1px solid #ced4da;
-        border-radius: .375rem;
+        background-color: #f8fafc; /* slate-50 */
+        border: 2px solid #f1f5f9; /* slate-100 */
+        border-radius: 1rem;       /* rounded-2xl */
+        padding: 0.875rem 1.25rem;
+        font-size: 0.875rem;
+        color: #1e293b;            /* slate-800 */
+        outline: none;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* Remove animações e brilhos no foco */
-    input:focus, select:focus, textarea:focus {
-        outline: 0;
-        box-shadow: none !important;
-        border-color: #0d6efd !important;
-        transition: none !important;
+    input:focus, textarea:focus, select:focus {
+        background-color: #ffffff;
+        border-color: #0ea5e9;     /* sky-500 */
+        box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);
     }
 
-    /* Ajuste para campo de arquivo */
+    /* Customização do Input de Arquivo (Cloudinary) */
     input[type="file"] {
-        padding: .375rem;
+        background-color: #f1f5f9;
+        border: 2px dashed #cbd5e1;
+        cursor: pointer;
+        padding: 1rem;
+        font-size: 0.75rem;
+        color: #64748b;
     }
+
+    input[type="file"]:hover {
+        background-color: #e2e8f0;
+        border-color: #0ea5e9;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(15px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fadeIn { animation: fadeIn 0.5s ease-out forwards; }
 </style>
+
+<script>
+    // Seleciona o input de arquivo (geralmente tem 'image' no nome ou id no Django)
+    const fileInput = document.querySelector('input[type="file"]');
+
+    if (fileInput) {
+        // 'camera' instrui o celular a abrir a câmera traseira preferencialmente
+        fileInput.setAttribute('accept', 'image/*');
+        fileInput.setAttribute('capture', 'environment');
+    }
+</script>
 {% endblock %}

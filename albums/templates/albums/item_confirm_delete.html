@@ -1,32 +1,61 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6 text-center">
-            <div class="card shadow-sm border-0 py-4 px-3">
-                <div class="card-body">
-                    <div class="mb-4">
-                        <span style="font-size: 4rem;">🗑️</span>
-                    </div>
-                    <h2 class="fw-bold mb-3 text-danger">Confirmar Exclusão</h2>
-                    <p class="text-muted fs-5 mb-4">
-                        Você tem certeza que deseja deletar o item:<br>
-                        <strong class="text-dark">"{{ item.title }}"</strong>?
-                        <br><br>
-                        <span class="small text-muted">Essa ação removerá o arquivo permanentemente.</span>
-                    </p>
+<div class="max-w-xl mx-auto py-16 animate-fadeIn">
+    <!-- Card de Confirmação -->
+    <div class="bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden">
 
-                    <form method="POST">
-                        {% csrf_token %}
-                        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                            <button type="submit" class="btn btn-danger btn-lg px-5 fw-bold shadow-sm">Sim, Deletar</button>
-                            <a href="javascript:history.back()" class="btn btn-outline-secondary btn-lg px-5">Cancelar</a>
-                        </div>
-                    </form>
-                </div>
+        <!-- Detalhe Superior em Vermelho -->
+        <div class="bg-rose-500 h-2 w-full"></div>
+
+        <div class="p-8 md:p-10 text-center">
+            <!-- Ícone de Lixeira -->
+            <div class="inline-flex items-center justify-center w-20 h-20 bg-rose-50 rounded-full mb-6">
+                <span class="text-4xl">🗑️</span>
             </div>
+
+            <h2 class="text-2xl font-black text-slate-900 tracking-tight mb-2">
+                Confirmar Exclusão
+            </h2>
+
+            <p class="text-slate-500 mb-8 leading-relaxed">
+                Você tem certeza que deseja deletar o item:<br>
+                <span class="text-slate-900 font-bold text-xl block mt-2">"{{ item.title }}"</span>
+            </p>
+
+            <!-- Alerta de Cloudinary/Arquivo -->
+            <div class="mb-10 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                <p class="text-xs text-slate-400 font-medium uppercase tracking-widest">
+                    ⚠️ Atenção: O arquivo de imagem será removido permanentemente da nuvem.
+                </p>
+            </div>
+
+            <!-- Formulário de Ação -->
+            <form method="POST" class="flex flex-col sm:flex-row gap-3 justify-center">
+                {% csrf_token %}
+                <button type="submit"
+                        class="px-8 py-4 bg-rose-600 hover:bg-rose-700 text-white font-black rounded-2xl shadow-lg shadow-rose-200 transition-all transform hover:scale-105 active:scale-95">
+                    Sim, Deletar
+                </button>
+                <a href="javascript:history.back()"
+                   class="px-8 py-4 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-2xl transition">
+                    Cancelar
+                </a>
+            </form>
         </div>
     </div>
+
+    <!-- Link de Ajuda -->
+    <p class="mt-8 text-center text-slate-400 text-xs">
+        Dica: Se você quer apenas mudar os dados, considere usar a opção <span class="font-bold text-sky-500">Editar</span>.
+    </p>
 </div>
+
+<style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(15px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fadeIn { animation: fadeIn 0.4s ease-out forwards; }
+</style>
 {% endblock %}

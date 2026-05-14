@@ -1,92 +1,114 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-6">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-dark text-white py-3">
-                    <h4 class="mb-0 fw-bold">
-                        {% if form.instance.pk %}
-                            <i class="bi bi-pencil-square"></i> Editar: {{ form.instance.title|default:form.instance.name }}
-                        {% else %}
-                            <i class="bi bi-plus-circle"></i> Adicionar Novo
-                        {% endif %}
-                    </h4>
-                </div>
-                <div class="card-body p-4">
-                    <form method="POST" enctype="multipart/form-data" novalidate>
-                        {% csrf_token %}
+<div class="max-w-2xl mx-auto py-10 animate-fadeIn">
+    <!-- Card do Formulário -->
+    <div class="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
 
-                        {% for field in form %}
-                            <div class="mb-3">
-                                <label for="{{ field.id_for_label }}" class="form-label fw-bold small text-uppercase text-muted">
-                                    {{ field.label }}
-                                </label>
+        <!-- Cabeçalho Dinâmico -->
+        <div class="bg-slate-900 px-8 py-6">
+            <h4 class="text-xl font-bold text-white flex items-center gap-3">
+                {% if form.instance.pk %}
+                    <span class="text-sky-400">📝</span> Editar: {{ form.instance.title|default:form.instance.name }}
+                {% else %}
+                    <span class="text-emerald-400">✨</span> Adicionar Novo Registro
+                {% endif %}
+            </h4>
+        </div>
 
-                                {# Injeta as classes do Bootstrap no campo automaticamente #}
-                                <div class="input-group">
-                                    {{ field }}
-                                </div>
+        <div class="p-8">
+            <form method="POST" enctype="multipart/form-data" novalidate class="space-y-6">
+                {% csrf_token %}
 
-                                {% if field.help_text %}
-                                    <div class="form-text text-muted">{{ field.help_text }}</div>
-                                {% endif %}
+                {% for field in form %}
+                    <div class="space-y-2">
+                        <label for="{{ field.id_for_label }}" class="block text-xs font-black text-slate-500 uppercase tracking-widest">
+                            {{ field.label }}
+                        </label>
 
-                                {% if field.errors %}
-                                    <div class="text-danger small mt-1">
-                                        {{ field.errors|striptags }}
-                                    </div>
-                                {% endif %}
-                            </div>
-                        {% endfor %}
-
-                        <div class="d-grid gap-2 mt-4">
-                            <button type="submit" class="btn btn-primary btn-lg fw-bold">Salvar Dados</button>
-                            <a href="javascript:history.back()" class="btn btn-outline-secondary">Cancelar</a>
+                        <div class="relative">
+                            {# Estilização dos campos do Django via Tailwind #}
+                            {{ field }}
                         </div>
-                        {% if form.instance.pk %}
-                            <div class="mt-4 border-top pt-3">
-                                <p class="text-muted small">Zona de Perigo</p>
-                                <a href="{% url 'collection_delete' form.instance.pk %}" class="btn btn-outline-danger btn-sm">
-                                    Excluir Coleção Permanentemente
-                                </a>
+
+                        {% if field.help_text %}
+                            <p class="text-xs text-slate-400 italic">{{ field.help_text }}</p>
+                        {% endif %}
+
+                        {% if field.errors %}
+                            <div class="flex items-center gap-2 text-rose-500 text-sm font-bold bg-rose-50 p-2 rounded-lg">
+                                <span>⚠️</span>
+                                {{ field.errors|striptags }}
                             </div>
                         {% endif %}
-                    </form>
+                    </div>
+                {% endfor %}
+
+                <!-- Ações do Formulário -->
+                <div class="flex flex-col gap-3 pt-6">
+                    <button type="submit" class="w-full py-4 bg-sky-600 hover:bg-sky-700 text-white font-black rounded-2xl shadow-lg shadow-sky-200 transition transform hover:-translate-y-1 active:scale-95">
+                        Salvar Alterações
+                    </button>
+                    <a href="javascript:history.back()" class="w-full py-4 bg-slate-50 hover:bg-slate-100 text-slate-500 font-bold rounded-2xl text-center transition">
+                        Cancelar e Voltar
+                    </a>
                 </div>
-            </div>
+
+                <!-- Zona de Perigo (Apenas Edição) -->
+                {% if form.instance.pk %}
+                    <div class="mt-10 pt-8 border-t border-slate-100">
+                        <p class="text-xs font-black text-rose-400 uppercase tracking-widest mb-4">Zona Crítica</p>
+                        <a href="{% url 'collection_delete' form.instance.pk %}" class="inline-flex items-center text-sm font-bold text-rose-500 hover:text-rose-700 transition">
+                            <span class="mr-2">🗑️</span> Excluir este registro permanentemente
+                        </a>
+                    </div>
+                {% endif %}
+            </form>
         </div>
     </div>
 </div>
 
 <style>
-    /* Faz com que todos os inputs do Django herdem as classes do Bootstrap */
-    input, select, textarea {
-        display: block;
+    /*
+       Injeção de estilo global para os widgets do Django que não aceitam
+       classes facilmente sem o uso de bibliotecas como 'django-widget-tweaks'
+    */
+    input[type="text"],
+    input[type="number"],
+    input[type="email"],
+    input[type="password"],
+    input[type="file"],
+    textarea,
+    select {
         width: 100%;
-        padding: .375rem .75rem;
-        font-size: 1rem;
-        font-weight: 400;
-        line-height: 1.5;
-        color: #212529;
-        background-color: #fff;
-        background-clip: padding-box;
-        border: 1px solid #ced4da;
-        appearance: none;
-        border-radius: .375rem;
-        transition: none !important;
+        background-color: #f8fafc; /* slate-50 */
+        border: 2px solid #f1f5f9; /* slate-100 */
+        border-radius: 1rem;       /* rounded-2xl */
+        padding: 0.875rem 1rem;
+        font-size: 0.875rem;
+        color: #1e293b;            /* slate-800 */
+        outline: none;
+        transition: all 0.2s ease-in-out;
     }
 
-    input:focus, select:focus, textarea:focus {
-        outline: 0;
-        box-shadow: none !important;
-        border-color: #86b7fe;
+    input:focus, textarea:focus, select:focus {
+        background-color: #ffffff;
+        border-color: #0ea5e9;     /* sky-500 */
+        box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);
     }
 
-    /* Ajuste específico para o campo de arquivo (imagem) */
-    input[type="file"] {
-        padding: .375rem .75rem;
+    /* Ajuste para checkbox (Privacidade) */
+    input[type="checkbox"] {
+        width: 1.25rem;
+        height: 1.25rem;
+        accent-color: #0ea5e9;
+        cursor: pointer;
     }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.98); }
+        to { opacity: 1; transform: scale(1); }
+    }
+    .animate-fadeIn { animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
 </style>
 {% endblock %}
