@@ -12,4 +12,5 @@ urlpatterns = [
     path('item/<int:pk>/delete/', views.item_delete, name='item_delete'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('search/', views.global_search, name='global_search'),
+    path('explore/', views.explore, name='explore'),
 ]

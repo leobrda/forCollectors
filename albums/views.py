@@ -182,3 +182,9 @@ def global_search(request):
         ).distinct()
 
     return render(request, 'albums/global_search_results.html', {'items': items, 'query': query})
+
+
+@login_required
+def explore(request):
+    items = Item.objects.filter(collection__is_public=True).order_by('-id')
+    return render(request, 'albums/explore.html', {'items': items})
