@@ -143,9 +143,9 @@ STATICFILES_STORAGE = "whitenoise.storage.StaticFilesStorage"
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': config('CLOUDINARY_CLOUD_NAME'),
-    'API_KEY': config('CLOUDINARY_API_KEY'),
-    'API_SECRET': config('CLOUDINARY_API_SECRET'),
+    'CLOUD_NAME': config('CLOUDINARY_CLOUD_NAME', default='build_name'),
+    'API_KEY': config('CLOUDINARY_API_KEY', default='build_key'),
+    'API_SECRET': config('CLOUDINARY_API_SECRET', default='build_secret'),
 }
 
 MEDIA_URL = '/media/'
