@@ -127,10 +127,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
-WHITENOISE_USE_FINDERS = False
+
+WHITENOISE_USE_FINDERS = True
 
 STORAGES = {
     "default": {
