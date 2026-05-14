@@ -3,9 +3,11 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
 class CustomUserCreationForm(UserCreationForm):
+    email = forms.EmailField(required=True, label="E-mail")
+
     class Meta(UserCreationForm.Meta):
         model = User
-        fields = ("username",)
+        fields = ("username", "email")
         labels = {
             'username': 'Nome de Usuário',
         }
@@ -16,6 +18,7 @@ class CustomUserCreationForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Traduzindo as labels de senha manualmente
+        self.fields['email'].help_text = "Usado para recuperação de senha."
         self.fields['password1'].label = "Senha"
         self.fields['password1'].help_text = "Sua senha deve ter pelo menos 8 caracteres e não pode ser muito comum."
         self.fields['password2'].label = "Confirmação de Senha"

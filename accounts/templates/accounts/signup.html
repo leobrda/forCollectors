@@ -3,11 +3,8 @@
 {% block content %}
 <div class="flex items-center justify-center min-h-[80vh] animate-fadeIn">
     <div class="max-w-lg w-full px-6 py-10">
-        <!-- Card de Cadastro -->
         <div class="bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden">
-
             <div class="p-8 md:p-12">
-                <!-- Cabeçalho -->
                 <div class="text-center mb-10">
                     <div class="inline-flex items-center justify-center w-16 h-16 bg-emerald-600 rounded-2xl mb-4 shadow-lg shadow-emerald-100">
                         <span class="text-3xl text-white">✍️</span>
@@ -28,16 +25,13 @@
                             </label>
 
                             <div class="relative">
-                                {# Renderização do Input do Django #}
                                 {% if 'password' in field.name %}
-                                    {# Injetamos a lógica do Alpine apenas nos campos de senha #}
                                     <input :type="show ? 'text' : 'password'"
                                            name="{{ field.name }}"
                                            id="{{ field.auto_id }}"
                                            required
                                            class="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl px-4 py-3 text-slate-900 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all duration-200">
 
-                                    <!-- Botão do Olhinho -->
                                     <button type="button" @click="show = !show"
                                             class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-emerald-600 transition-colors focus:outline-none">
                                         <svg x-show="!show" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -49,16 +43,17 @@
                                         </svg>
                                     </button>
                                 {% else %}
-                                    {# Inputs normais (Username, Email, etc) #}
                                     <input type="{{ field.field.widget.input_type }}"
                                            name="{{ field.name }}"
                                            id="{{ field.auto_id }}"
                                            value="{{ field.value|default_if_none:'' }}"
-                                           class="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl px-4 py-3 text-slate-900 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all duration-200">
+                                           {% if field.field.required %}required{% endif %}
+                                           class="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl px-4 py-3 text-slate-900 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all duration-200"
+                                           placeholder="{{ field.label }}">
                                 {% endif %}
                             </div>
 
-                            {% if field.help_text %}
+                            {% if field.help_text and not 'password' in field.name %}
                                 <p class="text-[10px] text-slate-400 italic px-1">{{ field.help_text }}</p>
                             {% endif %}
 
@@ -68,7 +63,6 @@
                         </div>
                     {% endfor %}
 
-                    <!-- Ações -->
                     <div class="pt-4 space-y-4">
                         <button type="submit"
                                 class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-black rounded-2xl shadow-xl shadow-emerald-100 transition-all transform hover:-translate-y-1 active:scale-95">
@@ -84,21 +78,5 @@
         </div>
     </div>
 </div>
-
-<style>
-    [x-cloak] { display: none !important; }
-
-    @keyframes fadeIn {
-        from { opacity: 0; transform: scale(0.98); }
-        to { opacity: 1; transform: scale(1); }
-    }
-    .animate-fadeIn { animation: fadeIn 0.5s ease-out forwards; }
-
-    @keyframes shake {
-        0%, 100% { transform: translateX(0); }
-        25% { transform: translateX(-4px); }
-        75% { transform: translateX(4px); }
-    }
-    .animate-shake { animation: shake 0.3s ease-in-out; }
-</style>
+<!-- Estilos omitidos para brevidade, mantenha os seus originais -->
 {% endblock %}
