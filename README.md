@@ -1,6 +1,6 @@
 # 🛡️ ForCollectors - v1.0.0
 
-O **EduDash** é uma plataforma full-stack robusta desenvolvida para colecionadores organizarem seus acervos. O sistema oferece uma experiência completa de gerenciamento, desde o cadastro seguro até a manipulação de mídia na nuvem.
+O **ForCollectors** é uma plataforma full-stack robusta desenvolvida para colecionadores organizarem seus acervos. O sistema oferece uma experiência completa de gerenciamento, desde o cadastro seguro até a manipulação de mídia na nuvem.
 
 ## 🚀 Tecnologias e Dependências
 
