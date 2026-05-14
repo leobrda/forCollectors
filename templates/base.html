@@ -12,31 +12,40 @@
         <div class="container">
             <a class="navbar-brand" href="{% url 'dashboard' %}">🛡️ ForCollectors</a>
 
-            <!-- Botão Hamburguer para Mobile -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent" aria-controls="navContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            {% if user.is_authenticated %}
+                <!-- Só aparece se estiver LOGADO -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-            <div class="collapse navbar-collapse" id="navContent">
-                <div class="navbar-nav me-auto">
-                    <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
-                    <a class="nav-link" href="{% url 'album_list' %}">Coleções</a>
-                </div>
+                <div class="collapse navbar-collapse" id="navContent">
+                    <div class="navbar-nav me-auto">
+                        <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+                        <a class="nav-link" href="{% url 'album_list' %}">Minhas Coleções</a>
+                        <a class="nav-link text-info" href="{% url 'explore' %}">✨ Explorar</a>
+                    </div>
 
-                <!-- Barra de Busca Global -->
-                <form class="d-flex me-lg-3 my-2 my-lg-0" action="{% url 'global_search' %}" method="GET">
-                    <input class="form-control form-control-sm me-2" type="search" name="q" placeholder="Buscar itens públicos..." aria-label="Search" value="{{ query|default:'' }}">
-                    <button class="btn btn-outline-light btn-sm" type="submit">Buscar</button>
-                </form>
-
-                <div class="navbar-nav align-items-center">
-                    <span class="nav-item nav-link text-light me-lg-3">Olá, <strong>{{ user.username }}</strong></span>
-                    <form action="{% url 'logout' %}" method="post" class="d-inline">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-outline-danger btn-sm">Sair</button>
+                    <!-- Barra de Busca Global -->
+                    <form class="d-flex me-lg-3 my-2 my-lg-0" action="{% url 'global_search' %}" method="GET">
+                        <input class="form-control form-control-sm me-2" type="search" name="q" placeholder="Buscar itens..." aria-label="Search">
+                        <button class="btn btn-outline-light btn-sm" type="submit">Buscar</button>
                     </form>
+
+                    <div class="navbar-nav align-items-center">
+                        <span class="nav-item nav-link text-light me-lg-3">Olá, <strong>{{ user.username }}</strong></span>
+                        <form action="{% url 'logout' %}" method="post" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-danger btn-sm">Sair</button>
+                        </form>
+                    </div>
                 </div>
-            </div>
+            {% else %}
+                <!-- Só aparece para VISITANTES (Não logados) -->
+                <div class="navbar-nav ms-auto">
+                    <a href="{% url 'login' %}" class="btn btn-outline-light btn-sm me-2">Entrar</a>
+                    <a href="{% url 'signup' %}" class="btn btn-primary btn-sm">Criar Conta</a>
+                </div>
+            {% endif %}
         </div>
     </nav>
 
